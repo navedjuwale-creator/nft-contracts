@@ -1,0 +1,31 @@
+name: NFT security regression tests
+
+on:
+  push:
+    branches:
+      - audit/nft-security-regression-tests
+  pull_request:
+    paths:
+      - "packages/contracts/**"
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig.json"
+      - "jest.config.js"
+      - ".github/workflows/nft-security-regression.yml"
+  workflow_dispatch:
+
+jobs:
+  jest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run Jest suite
+        run: npm test
