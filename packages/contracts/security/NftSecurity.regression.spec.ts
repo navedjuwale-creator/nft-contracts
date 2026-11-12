@@ -42,7 +42,7 @@ describe("NFT security regression tests", () => {
                 body: new CellMessage(ItemQueries.transfer({
                     newOwner: randomAddress(),
                     forwardAmount: toNano("0.01"),
-                    responseTo: null
+                    responseTo: randomAddress()
                 }))
             })
         }));
