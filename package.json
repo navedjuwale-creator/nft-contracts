@@ -32,6 +32,6 @@
     "uuid": "^8.3.2"
   },
   "scripts": {
-    "test": "jest --runInBand"
+    "test": "node -r ./scripts/ton-wasm-fetch.cjs ./node_modules/jest/bin/jest.js --runInBand"
   }
 }
