@@ -26,6 +26,6 @@ jobs:
           node-version: 18
           cache: npm
       - name: Install locked dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
       - name: Run Jest suite
         run: npm test
