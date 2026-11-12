@@ -1,7 +1,7 @@
-import {Cell, toNano} from "ton";
+import {Cell, CellMessage, CommonMessageInfo, InternalMessage, toNano} from "ton";
 import {randomAddress} from "../../utils/randomAddress";
-import {NftItemData, NftSingleData} from "./NftItem.data";
-import {NftItemLocal} from "./NftItemLocal";
+import {NftItemData, NftSingleData, Queries as ItemQueries} from "../nft-item/NftItem.data";
+import {NftItemLocal} from "../nft-item/NftItemLocal";
 import {NftCollectionData} from "../nft-collection/NftCollection.data";
 import {NftCollectionLocal} from "../nft-collection/NftCollectionLocal";
 
@@ -43,18 +43,20 @@ describe("NFT security regression tests", () => {
     it("rejects an ownership transfer initiated by a non-owner and preserves ownership", async () => {
         const nft = await NftItemLocal.createFromConfig(itemConfig);
         const attacker = randomAddress();
-        const attemptedOwner = randomAddress();
 
-        const result = await nft.contract.sendInternalMessage({
+        const result = await nft.contract.sendInternalMessage(new InternalMessage({
             to: nft.address,
             from: attacker,
             value: toNano(1),
             bounce: false,
-            body: {
-                // Build the canonical transfer body through the public query helper.
-                body: undefined
-            } as any
-        } as any);
+            body: new CommonMessageInfo({
+                body: new CellMessage(ItemQueries.transfer({
+                    newOwner: randomAddress(),
+                    forwardAmount: toNano("0.01"),
+                    responseTo: null
+                }))
+            })
+        }));
 
         expect(result.exit_code).not.toEqual(0);
         const data = await nft.getNftData();
@@ -62,7 +64,6 @@ describe("NFT security regression tests", () => {
         if (data.isInitialized) {
             expect(data.ownerAddress.toFriendly()).toEqual(OWNER.toFriendly());
         }
-        expect(attemptedOwner).toBeDefined();
     });
 
     it("rejects collection batch minting by a non-owner", async () => {
