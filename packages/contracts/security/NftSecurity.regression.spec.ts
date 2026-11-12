@@ -1,6 +1,6 @@
 import {Cell, CellMessage, CommonMessageInfo, InternalMessage, toNano} from "ton";
 import {randomAddress} from "../../utils/randomAddress";
-import {NftItemData, NftSingleData, Queries as ItemQueries} from "../nft-item/NftItem.data";
+import {NftItemData, Queries as ItemQueries} from "../nft-item/NftItem.data";
 import {NftItemLocal} from "../nft-item/NftItemLocal";
 import {NftCollectionData} from "../nft-collection/NftCollection.data";
 import {NftCollectionLocal} from "../nft-collection/NftCollectionLocal";
@@ -13,17 +13,6 @@ const itemConfig: NftItemData = {
     collectionAddress: COLLECTION,
     ownerAddress: OWNER,
     content: "security-regression"
-};
-
-const singleConfig: NftSingleData = {
-    ownerAddress: OWNER,
-    editorAddress: randomAddress(),
-    content: "security-regression",
-    royaltyParams: {
-        royaltyFactor: 100,
-        royaltyBase: 200,
-        royaltyAddress: randomAddress()
-    }
 };
 
 const collectionConfig: NftCollectionData = {
